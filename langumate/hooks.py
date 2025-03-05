@@ -48,6 +48,10 @@ app_include_js = ["langumate.bundle.js"]
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
+extend_bootinfo = [
+	"langumate.utils.languages.add_bootinfo"
+]
+
 # Svg Icons
 # ------------------
 # include app icons in desk
@@ -83,12 +87,12 @@ app_include_js = ["langumate.bundle.js"]
 # ------------
 
 # before_install = "langumate.install.before_install"
-# after_install = "langumate.install.after_install"
+after_install = "langumate.install.after_install"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "langumate.uninstall.before_uninstall"
+before_uninstall = "langumate.uninstall.before_uninstall"
 # after_uninstall = "langumate.uninstall.after_uninstall"
 
 # Integration Setup

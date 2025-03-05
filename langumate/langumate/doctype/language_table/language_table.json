@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-05 18:55:07.003350",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "language",
+  "language_name",
+  "url"
+ ],
+ "fields": [
+  {
+   "fieldname": "language",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Language",
+   "options": "Language"
+  },
+  {
+   "fetch_from": "language.language_name",
+   "fieldname": "language_name",
+   "fieldtype": "Data",
+   "label": "Language Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "URL"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-05 19:09:59.072310",
+ "modified_by": "Administrator",
+ "module": "Langumate",
+ "name": "Language Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

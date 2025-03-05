@@ -1,4 +1,21 @@
 (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __spreadValues = (a, b) => {
+    for (var prop in b || (b = {}))
+      if (__hasOwnProp.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+      for (var prop of __getOwnPropSymbols(b)) {
+        if (__propIsEnum.call(b, prop))
+          __defNormalProp(a, prop, b[prop]);
+      }
+    return a;
+  };
+
   // frappe-html:/home/frappe/frappe-bench/apps/langumate/langumate/public/js/frappe/ui/toolbar/navbar.html
   frappe.templates["navbar"] = `<div class="sticky-top">
 	<header class="navbar navbar-expand" role="navigation">
@@ -80,7 +97,7 @@
                     <li class="nav-item dropdown dropdown-language dropdown-mobile hidden">
                         <button type="button" class="btn-reset nav-link text-muted" data-toggle="dropdown"
                         aria-expanded="true" aria-haspopup="true" >
-                            <img id="header-lang-img" src="/assets/langumate/flags/us.png" alt="Header Language" style="height:16px">
+                            <img id="header-lang-img" src="/assets/langumate/flags/um.png" alt="Header Language" style="height:16px">
                         </button>
                         <div class="dropdown-menu languages-list dropdown-menu-right" role="menu" ></div>
 					</li>
@@ -174,9 +191,11 @@
     }
     add_language_switcher() {
       var _a;
+      let me = this;
       this.dropdown = $(".navbar").find(".dropdown-language").removeClass("hidden");
       this.dropdown_list = this.dropdown.find(".languages-list");
-      const languages = {
+      this.dropdown_list.empty();
+      let languages = {
         en: {
           name: "English",
           flag: "/assets/langumate/flags/um.png"
@@ -186,28 +205,32 @@
           flag: "/assets/langumate/flags/sa.png"
         }
       };
-      var currentLanguage = frappe.boot.user.language || "en";
-      $("#header-lang-img").attr("src", ((_a = languages[currentLanguage]) == null ? void 0 : _a.flag) || languages.en.flag);
-      Object.entries(languages).forEach(([lang, details]) => {
+      let languages_ = frappe.boot.languages || {};
+      let all_lang = __spreadValues(__spreadValues({}, languages_), languages);
+      let currentLanguage = frappe.boot.user.language || "en";
+      let currentFlag = ((_a = all_lang[currentLanguage]) == null ? void 0 : _a.flag) || "/assets/langumate/flags/us.png";
+      $("#header-lang-img").attr("src", currentFlag);
+      Object.entries(all_lang).forEach(([lang, details]) => {
         let item = `
                 <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="${lang}">
                     <img src="${details.flag}" alt="${details.name}" class="me-1" style="height:12px">
                     <span class="align-middle">${details.name}</span>
                 </a>`;
-        this.dropdown_list.append(item);
+        me.dropdown_list.append(item);
       });
-      this.bind_language_switcher_events();
+      me.bind_language_switcher_events(all_lang);
     }
-    bind_language_switcher_events() {
+    bind_language_switcher_events(languages) {
       let me = this;
       let currentLanguage = frappe.boot.user.language || "en";
       this.dropdown_list.find(".language").on("click", function() {
+        var _a;
         let selectedLang = $(this).data("lang");
-        let flagSrc = $(this).find("img").attr("src");
         if (selectedLang === currentLanguage) {
           frappe.show_alert(__("You are already using this language."));
           return;
         }
+        let flagSrc = ((_a = languages[selectedLang]) == null ? void 0 : _a.flag) || "/assets/langumate/flags/um.png";
         $("#header-lang-img").attr("src", flagSrc);
         frappe.call({
           method: "frappe.client.set_value",
@@ -220,7 +243,8 @@
           freeze: true,
           freeze_message: __("Refreshing..."),
           callback: function() {
-            frappe.show_alert(__("Language changed to: {0}", [selectedLang]));
+            var _a2;
+            frappe.show_alert(__("Language changed to: {0}", [((_a2 = languages[selectedLang]) == null ? void 0 : _a2.name) || selectedLang]));
             window.location.reload();
           }
         });
@@ -229,4 +253,4 @@
   };
   frappe.ui.toolbar.Toolbar = CustomToolbar;
 })();
-//# sourceMappingURL=langumate.bundle.G2PFFYP7.js.map
+//# sourceMappingURL=langumate.bundle.SGNSM6BM.js.map

@@ -2,20 +2,21 @@ frappe.provide("frappe.ui.toolbar");
 
 class CustomToolbar extends frappe.ui.toolbar.Toolbar {
     constructor() {
-        super();  // Call the original constructor to ensure everything initializes properly
+        super();
     }
 
     make() {
-        super.make();  // Call the original method first
+        super.make();
         this.add_language_switcher();
     }
 
     add_language_switcher() {
+        let me = this;
+
         this.dropdown = $(".navbar").find(".dropdown-language").removeClass("hidden");
         this.dropdown_list = this.dropdown.find(".languages-list");
-    
-        // Define available languages and flags
-        const languages = {
+        this.dropdown_list.empty();
+        let languages = {
             en: {
                 name: "English",
                 flag: "/assets/langumate/flags/um.png"
@@ -24,47 +25,44 @@ class CustomToolbar extends frappe.ui.toolbar.Toolbar {
                 name: "العربية",
                 flag: "/assets/langumate/flags/sa.png"
             }
-        };
-    
-        // Get current language from Frappe user settings
-        var currentLanguage = frappe.boot.user.language || 'en';
-    
-        // Set initial flag based on current language
-        $("#header-lang-img").attr("src", languages[currentLanguage]?.flag || languages.en.flag);
-    
-        // Add both language options to dropdown (you can add more if needed)
-        Object.entries(languages).forEach(([lang, details]) => {
+        }
+        let languages_ = frappe.boot.languages || {};  // Now it's preloaded instantly
+        let all_lang = { ...languages_, ...languages }; 
+        // Get current language
+        let currentLanguage = frappe.boot.user.language || 'en';
+
+        // Set initial flag
+        let currentFlag = all_lang[currentLanguage]?.flag || "/assets/langumate/flags/um.png";
+        $("#header-lang-img").attr("src", currentFlag);
+
+        // Populate dropdown
+        Object.entries(all_lang).forEach(([lang, details]) => {
             let item = `
                 <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="${lang}">
                     <img src="${details.flag}" alt="${details.name}" class="me-1" style="height:12px">
                     <span class="align-middle">${details.name}</span>
                 </a>`;
-            this.dropdown_list.append(item);
+            me.dropdown_list.append(item);
         });
-    
-        // Bind language switcher click events
-        this.bind_language_switcher_events();
+
+        me.bind_language_switcher_events(all_lang);
     }
-    
-    
-    bind_language_switcher_events() {
+
+    bind_language_switcher_events(languages) {
         let me = this;
         let currentLanguage = frappe.boot.user.language || 'en';
-    
+
         this.dropdown_list.find(".language").on("click", function () {
             let selectedLang = $(this).data("lang");
-            let flagSrc = $(this).find("img").attr("src");
-    
-            // If user selects the same language, do nothing
+
             if (selectedLang === currentLanguage) {
                 frappe.show_alert(__("You are already using this language."));
                 return;
             }
-    
-            // Immediately update the flag for smoother UX
+
+            let flagSrc = languages[selectedLang]?.flag || "/assets/langumate/flags/um.png";
             $("#header-lang-img").attr("src", flagSrc);
-    
-    
+
             frappe.call({
                 method: "frappe.client.set_value",
                 args: {
@@ -76,18 +74,14 @@ class CustomToolbar extends frappe.ui.toolbar.Toolbar {
                 freeze: true,
                 freeze_message: __('Refreshing...'),
                 callback: function () {
-                    frappe.show_alert(__("Language changed to: {0}", [selectedLang]));
-    
-                    // Delay a bit so the user sees the alert, then reload
+                    frappe.show_alert(__("Language changed to: {0}", [languages[selectedLang]?.name || selectedLang]));
                     window.location.reload();
                     
                 }
             });
         });
     }
-    
-    
 }
 
-// Override Frappe's toolbar with our extended class
+// Override Frappe's toolbar
 frappe.ui.toolbar.Toolbar = CustomToolbar;
