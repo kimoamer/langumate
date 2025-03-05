@@ -70,7 +70,7 @@ Once installed, the **Langumate** will automatically appear in the **top-right n
 
 ## Compatibility
 
-- ✔️ **Frappe v14+** (Tested on versions 14 and 15)
+- ✔️ **Frappe v15+** (Tested on versions 15)
 
 ---
 
