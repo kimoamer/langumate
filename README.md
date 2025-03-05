@@ -64,8 +64,7 @@ Once installed, the **Langumate** will automatically appear in the **top-right n
 | Example Dropdown |
 |---|
 | ![Dropdown Example](https://i.postimg.cc/ncfgq0Bv/2025-03-05-22-28-54.png) |
-
-(![](https://i.postimg.cc/yNxb75Cz/navbar.png))
+| ![Navbar Settings](https://i.postimg.cc/yNxb75Cz/navbar.png)
 
 ---
 
