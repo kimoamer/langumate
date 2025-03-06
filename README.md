@@ -18,8 +18,8 @@ This is a **custom app** for the [Frappe Framework](https://frappeframework.com)
 1. Clone the repository into your Frappe apps directory:
 
     ```bash
-    cd ~/frappe-bench/apps
-    git clone https://github.com/kimoamer/langumate.git
+    cd ~/frappe-bench
+    bench get-app https://github.com/kimoamer/langumate.git
     ```
 
 2. Install the app into your site:
